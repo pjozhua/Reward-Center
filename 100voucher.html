@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reward Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0f2247;--blue:#2456d6;--ink:#5b3352;--rose:#e0608f;--blush:#fdeaf1;--pink:#f8c4d8;--lav:#e6dcff;--glass:rgba(255,255,255,.66);--serif:"Cormorant Garamond",Georgia,serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Poppins,system-ui,sans-serif;background:#fff;color:var(--navy);line-height:1.7;overflow-x:hidden;transition:background .8s}
+body.p2{background:linear-gradient(180deg,#fff0f6 0%,#fbdbe8 40%,#efe4ff 100%) fixed;color:var(--ink)}
+img{max-width:100%;height:auto;display:block}
+button{font:inherit;cursor:pointer;border:0;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid var(--rose);outline-offset:3px}
+
+/* floating FX layer */
+#fx{position:fixed;inset:0;pointer-events:none;z-index:80;overflow:hidden}
+.fh{position:absolute;opacity:0;animation:rise 4s ease-out forwards}
+@keyframes rise{0%{opacity:0;transform:translate(0,0) scale(.6)}15%{opacity:.9}100%{opacity:0;transform:translate(var(--dx),-70vh) scale(1.1) rotate(20deg)}}
+
+/* ===== PAGE 1 ===== */
+#page1{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;background:linear-gradient(180deg,#fff 0%,#eff4fb 100%);transition:opacity .9s,transform .9s}
+#page1.out{opacity:0;transform:scale(.97)}
+.brand{padding:16px 20px;background:#fff;border-bottom:1px solid #e3e9f3;font-weight:600;font-size:.85rem;letter-spacing:.06em}
+.brand b{color:var(--blue)}
+.wrap1{width:100%;max-width:460px;margin:0 auto;padding:36px 20px 48px;text-align:center;flex:1}
+h1{font-size:clamp(2rem,9vw,2.7rem);line-height:1.15;font-weight:600;letter-spacing:-.02em}
+.lead{color:#4a5a78;margin-top:8px;font-size:1.05rem}
+.reward-card{position:relative;overflow:hidden;margin:28px 0 24px;padding:28px 22px 22px;border-radius:22px;color:#fff;text-align:left;background:linear-gradient(135deg,#0f2247 0%,#1c3f9e 60%,#2f6bf0 100%);box-shadow:0 24px 44px -20px rgba(15,34,71,.6);transition:opacity .8s,filter .8s,transform .8s}
+.reward-card::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.16) 50%,transparent 60%);transform:translateX(-100%);animation:shine 4s 1s infinite}
+@keyframes shine{to{transform:translateX(100%)}}
+.chip{display:inline-block;padding:4px 12px;border-radius:99px;background:rgba(255,255,255,.16);font-size:.72rem;font-weight:500}
+.amt{font-size:clamp(3rem,15vw,4rem);font-weight:600;letter-spacing:-.03em;margin:12px 0 0;line-height:1.1}
+.reward-card p{opacity:.85;font-size:.95rem}
+.rc-row{display:flex;justify-content:space-between;margin-top:18px;padding-top:14px;border-top:1px dashed rgba(255,255,255,.35);font-size:.85rem}
+.reward-card.dissolve{opacity:0;filter:blur(8px);transform:scale(.92)}
+#claimBtn{width:100%;padding:18px;border-radius:14px;background:var(--navy);color:#fff;font-weight:600;font-size:1.05rem;letter-spacing:.05em;box-shadow:0 14px 26px -12px rgba(15,34,71,.7);transition:transform .15s,opacity .3s}
+#claimBtn:active{transform:scale(.97)}
+#claimBtn:disabled{opacity:.45}
+#loader{margin-top:20px}
+.bar{height:8px;border-radius:9px;background:#dbe4f4;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),#5b8cff);transition:width .9s ease}
+#lt{margin-top:10px;font-size:.92rem;color:#4a5a78}
+.fine{display:block;margin-top:18px;color:#7c89a3;font-size:.8rem}
+
+/* ===== PAGE 2 ===== */
+#page2{animation:fadein 1.2s both}
+@keyframes fadein{from{opacity:0}}
+.sec,.closing{padding:44px 18px;max-width:1040px;margin:0 auto}
+h2,h3{font-family:var(--serif);font-weight:600;line-height:1.2;color:#a83e6c}
+h2{font-size:clamp(1.8rem,7vw,2.5rem)}
+.st{text-align:center;margin-bottom:28px}
+.glass{background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.85);border-radius:26px;box-shadow:0 20px 40px -22px rgba(200,80,130,.5)}
+.reveal-top{min-height:88vh;min-height:88dvh;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:16px;padding:60px 24px;text-align:center;max-width:640px;margin:0 auto}
+.seq{font-family:var(--serif);font-size:clamp(1.4rem,5.5vw,1.9rem);opacity:0;transform:translateY(12px);transition:opacity 1s,transform 1s}
+.seq.show{opacity:1;transform:none}
+.seq.big{font-size:clamp(1.8rem,7.5vw,2.6rem);color:#a83e6c;font-weight:600;margin-top:10px}
+.seq.joke{font-family:Poppins,sans-serif;font-size:.95rem;color:#8b6b83}
+.rv{opacity:0;transform:translateY(24px);transition:opacity 1s,transform 1s}
+.rv.show{opacity:1;transform:none}
+.intro,.letter,.cl-in{padding:28px 22px}
+.intro h2,.cl-in h2{margin-bottom:14px}
+.intro p+p,.letter p+p,.cl-in p+p{margin-top:14px}
+.intro{max-width:680px;margin:0 auto}
+
+/* envelope */
+.envelope{position:relative;display:block;width:min(300px,80vw);aspect-ratio:3/2;margin:0 auto;background:none;perspective:800px}
+.envelope span{position:absolute;display:block}
+.pocket{inset:0;background:linear-gradient(160deg,#f7b6cf,#e88fb0);border-radius:12px;clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%);box-shadow:0 18px 30px -14px rgba(200,80,130,.6)}
+.paper{left:8%;right:8%;top:8%;bottom:6%;background:#fff;border-radius:8px;transition:transform .9s .3s}
+.flap{left:0;right:0;top:0;height:58%;background:linear-gradient(#f4a4c2,#f9c3d7);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .7s;z-index:3}
+.seal{left:50%;top:44%;transform:translate(-50%,-50%);font-size:1.6rem;z-index:4;transition:opacity .4s;animation:beat 2s infinite}
+@keyframes beat{50%{transform:translate(-50%,-50%) scale(1.15)}}
+.envelope.open .flap{transform:rotateX(180deg);z-index:0}
+.envelope.open .paper{transform:translateY(-38%)}
+.envelope.open .seal{opacity:0}
+.envelope{transition:margin .8s}.envelope.open{margin:120px auto 0}
+.envelope:active{transform:scale(.98)}
+.hint{text-align:center;margin:14px 0 6px;font-size:.85rem;color:#a06b88}
+.letter-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows 1.1s ease}
+.letter-wrap>div{overflow:hidden;opacity:0;transition:opacity 1.2s .4s;max-width:640px;margin:0 auto}
+.letter-wrap.open{grid-template-rows:1fr}
+.letter-wrap.open>div{opacity:1;padding:20px 4px 6px}
+.letter{font-family:var(--serif);font-size:1.2rem;line-height:1.7}
+.sign,.beg{font-weight:600;color:#a83e6c}
+.sign{margin-top:18px!important}
+
+/* player */
+.player{display:flex;gap:16px;align-items:center;padding:16px 18px;margin:20px auto 0;max-width:640px}
+#pp{flex:none;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#f58bb1,#e0608f);color:#fff;font-size:1.5rem;box-shadow:0 10px 20px -8px rgba(224,96,143,.8)}
+#pp.on #ic{display:inline-block;animation:spin 2.4s linear infinite}
+@keyframes spin{50%{transform:rotate(14deg) scale(1.15)}}
+.pi{flex:1;min-width:0;display:flex;flex-direction:column;font-size:.85rem}
+.pi b{color:#a83e6c}.pi span,.pi em{color:#8b6b83;font-style:normal;font-size:.78rem}
+.pbar{height:8px;margin:8px 0 2px;border-radius:9px;background:#f3cfde;cursor:pointer;overflow:hidden}
+#pfill{display:block;height:100%;width:0;background:linear-gradient(90deg,#f58bb1,#e0608f)}
+
+/* cards */
+.cards{display:grid;gap:16px}
+.card{position:relative;width:100%;min-height:150px;padding:22px;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;color:#7a2a54;font-family:var(--serif);font-size:1.3rem;line-height:1.2;box-shadow:0 18px 30px -18px rgba(200,80,130,.7);animation:bob 5s ease-in-out infinite;transition:transform .3s,box-shadow .3s}
+.card i{font-style:normal;font-size:2rem}
+.c1{background:linear-gradient(140deg,#ffd9e6,#f9b3cf)}.c2{background:linear-gradient(140deg,#ffe3ef,#eab8e6)}
+.c3{background:linear-gradient(140deg,#fbd3e1,#e3c6ff)}.c4{background:linear-gradient(140deg,#f9b3cf,#d9c3ff)}
+.card-w:nth-child(2) .card{animation-delay:-1.2s}.card-w:nth-child(3) .card{animation-delay:-2.4s}.card-w:nth-child(4) .card{animation-delay:-3.6s}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.card:hover{animation-play-state:paused;transform:translateY(-8px) scale(1.03);box-shadow:0 26px 40px -18px rgba(200,80,130,.8)}
+.card:active{animation:none;transform:scale(.95)}
+
+/* modal + finale */
+.modal,.finale{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:opacity .5s,visibility .5s}
+.modal{z-index:60;background:rgba(91,51,82,.4);backdrop-filter:blur(3px)}
+.modal.on,.finale.on{opacity:1;visibility:visible}
+.sheet{width:100%;max-width:520px;max-height:86dvh;overflow:auto;padding:28px 24px;transform:translateY(24px) scale(.96);transition:transform .5s;background:rgba(255,255,255,.92)}
+.modal.on .sheet{transform:none}
+.sheet h3{font-size:1.7rem;margin-bottom:12px}
+.sheet p{font-size:1rem;margin-bottom:20px}
+.btn2{padding:15px 28px;border-radius:99px;background:linear-gradient(135deg,#f58bb1,#e0608f);color:#fff;font-weight:500;box-shadow:0 12px 22px -10px rgba(224,96,143,.9);transition:transform .2s}
+.btn2:hover{transform:translateY(-2px)}.btn2:active{transform:scale(.96)}
+.finale{z-index:70;background:radial-gradient(circle,rgba(120,40,90,.85),rgba(40,10,40,.94));text-align:center;color:#fff;overflow:auto;transition-duration:1.4s}
+.fin-in{max-width:560px;display:flex;flex-direction:column;gap:18px}
+.fl{opacity:0;transform:translateY(14px);transition:opacity 1.4s,transform 1.4s;font-family:var(--serif);font-size:1.3rem}
+.fl.show{opacity:1;transform:none}
+.fl.big{font-size:clamp(2rem,9vw,3rem);font-weight:600}
+.fl.quote{font-size:1.4rem;line-height:1.6}
+.fx-close{position:absolute;top:16px;right:16px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;font-size:1.1rem}
+
+/* gallery */
+.gallery{display:grid;gap:22px}
+.ph{margin:0;overflow:hidden}
+.ph img{width:100%;height:auto}
+figcaption{padding:16px 18px 20px}
+figcaption b{font-family:var(--serif);font-size:1.25rem;color:#a83e6c;line-height:1.3;display:block}
+figcaption p{margin-top:6px;font-size:.92rem}
+figcaption em{display:inline-block;margin-top:8px;color:#a06b88}
+.future{display:flex;flex-direction:column}
+.frame{margin:14px 14px 0;aspect-ratio:4/5;border-radius:20px;border:2px dashed #f08db2;background:linear-gradient(160deg,#fff5f9,#f3e6ff);display:flex;align-items:center;justify-content:center;animation:glow 3s ease-in-out infinite}
+.cam{font-size:3.4rem;animation:bob 4s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 28px 4px rgba(240,141,178,.6)}}
+
+/* closing */
+.closing{padding:56px 16px 90px;max-width:none;background:linear-gradient(180deg,transparent,#f9c3d9 70%,#f2aecb)}
+.cl-in{max-width:680px;margin:0 auto;text-align:center;padding:36px 22px}
+.thx{font-family:var(--serif);font-size:1.6rem;font-weight:600;line-height:1.3}
+.cl-in .btn2{margin-top:28px}
+
+/* tablet + desktop */
+@media(min-width:700px){
+  .sec{padding:64px 32px}
+  .cards{grid-template-columns:1fr 1fr}
+  .gallery{grid-template-columns:1fr 1fr;align-items:start}
+  .intro,.letter,.cl-in{padding:40px}
+}
+@media(min-width:1020px){
+  .cards{grid-template-columns:repeat(4,1fr)}
+  .card{min-height:200px}
+  .gallery{grid-template-columns:repeat(3,1fr)}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01s!important}html{scroll-behavior:auto}}
+
+</style>
+</head>
+<body>
+<div id="fx" aria-hidden="true"></div>
+
+<!-- ============ PAGE 1: REWARD PAGE (fictional, asks for NO info) ============ -->
+<section id="page1">
+  <header class="brand"><b>◆</b> Reward Center</header>
+  <div class="wrap1">
+    <h1>Congratulations!</h1>
+    <!-- CHANGE REWARD AMOUNT: edit "₱100" here, in the card, and on the button -->
+    <p class="lead">You've received a ₱100 reward.</p>
+    <div class="reward-card" id="rewardCard">
+      <span class="chip">Reward voucher</span>
+      <div class="amt">₱100.00</div>
+      <p>Your reward is ready to claim.</p>
+      <div class="rc-row"><span>Status</span><b>Ready to claim</b></div>
+    </div>
+    <button id="claimBtn" type="button">CLAIM ₱100</button>
+    <div id="loader" hidden>
+      <div class="bar"><i id="bar"></i></div>
+      <p id="lt" aria-live="polite">Verifying reward...</p>
+    </div>
+    <small class="fine">This reward was prepared especially for you.</small>
+  </div>
+</section>
+
+<!-- ============ PAGE 2: THE REAL SURPRISE ============ -->
+<main id="page2" hidden>
+
+  <!-- THE REVEAL -->
+  <header class="reveal-top">
+    <p class="seq">surprise baby HAHAHA</p>
+    <p class="seq">There isn't actually a ₱100 reward...</p>
+    <p class="seq">But I do have something much more special for you.</p>
+    <p class="seq big">I made this little place on the internet just for you Nica. </p>
+    <p class="seq joke">So technically... you still got something. HAHAHA.</p>
+  </header>
+
+  <!-- PERSONAL INTRODUCTION (edit freely) -->
+  <section class="sec rv">
+    <div class="glass intro">
+      <h2>To my Nica Angela,</h2>
+      <p>Sobrang saya ko na dumating ka sa buhay ko. Hindi ko man maexplain nang maayos, pero ang gaan lang ng feeling kapag kausap kita. Kahit simpleng chats, random kwentuhan, or ml/codm games natin, somehow, napapasaya mo yung araw ko.</p>
+      
+      <p>I’m really grateful for every little moment we share, and I’m looking forward to making more memories with you. Kaya ginawa ko to, just for you. </p>
+    </div>
+  </section>
+
+  <!-- INTERACTIVE LOVE LETTER -->
+  <section class="sec rv" id="letterSec">
+    <h2 class="st">A Little Letter For You 💌</h2>
+    <button id="envelope" class="envelope" type="button" aria-expanded="false" aria-label="Open the letter">
+      <span class="paper"></span><span class="flap"></span><span class="pocket"></span><span class="seal">💗</span>
+    </button>
+    <p class="hint" id="hint">Tap the envelope</p>
+    <div class="letter-wrap" id="letterWrap"><div>
+      <!-- LOVE LETTER TEXT: edit below -->
+      <article class="glass letter">
+        <p>To My Nica Angela,</p>
+        <p>I just want you to know kung gaano ako kasaya na dumating ka sa buhay ko. Hindi ko talaga inexpect na yung random na simula natin would become something this special to me.</p>
+        <p>Thank you for all the little things you do yung mga random kwentuhan natin, tawanan, chats, and even yung mga simpleng ml games natin those moments may seem simple, pero they always end up making my day better. I want you to know na I genuinely appreciate having you in my life. Gusto ko pang gumawa ng maraming memories with you, matuto kasama ka and sabay tayong maggrow habang hinaharap natin yung mga bagay na darating sa atin.</p>
+        <p>I know I wont always be perfect pero I'll always try to be better to understand you and to be someone na pwede mong lapitan whenever you need someone.</p>
+        <p>Palagi mong tatandaan, baby, meron kang ako na handang sumuporta sayo, makinig sayo, at maniwala sayo. Kahit anong pangarap mo, I'll always be cheering for you.</p>
+        <p class="sign">— Your Polpol </p>
+      </article>
+    </div></div>
+    <!-- MUSIC FILE: change src below (default assets/our-song.mp3) -->
+    <div class="glass player" id="player">
+      <audio id="au" src="assets/our-song.mp3" preload="none"></audio>
+      <button id="pp" type="button" aria-label="Play our song"><span id="ic">🎵</span></button>
+      <div class="pi">
+        <b id="pt">Play our song 🎵</b>
+        <span>Can't Help Falling in Love</span>
+        <div class="pbar" id="pbar"><i id="pfill"></i></div>
+        <em id="ptime">0:00</em>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOUR MESSAGE CARDS: edit title / icon / message inside each .msg -->
+  <section class="sec rv">
+    <h2 class="st">Four Little Things I Want You To Know </h2>
+    <div class="cards">
+      <div class="card-w"><button class="card c1" type="button" data-t="Why I'm Thankful For You"><i>🌷</i><b>Why I'm Thankful For You</b></button>
+        <div class="msg" hidden>I'm thankful for you because you make my ordinary days feel a little more special. Thank you sa mga kwentuhan, tawanan, and even sa mga simpleng moments natin. I'm just really happy na dumating ka sa buhay ko.<br><br></div></div>
+      <div class="card-w"><button class="card c2" type="button" data-t="What I Love About You"><i>✨</i><b>What I Love About You</b></button>
+        <div class="msg" hidden>I love you for who you are. Hindi dahil kailangan mong maging perfect or magbago para maging deserving of my love. I love the way you are with all your little habits, your personality, and everything that makes you, you and I hope you always know na enough ka sa'kin just as you are.</div></div>
+      <div class="card-w"><button class="card c3" type="button" data-t="Our Little Moments"><i>🎮</i><b>Our Little Moments</b></button>
+        <div class="msg" hidden>Maybe simple lang yung mga moments natin random chats, tawanan, or ml games but theyre some of my favorite moments. Hindi man natin namamalayan were already making little memories that I'll always treasure. </div></div>
+      <div class="card-w"><button class="card c4" type="button" data-t="For The Future"><i>🌙</i><b>For The Future</b></button>
+        <div class="msg" hidden>I don't want to rush anything, I just want to keep getting to know you little by little. I want to discover more about you, your dreams, your stories, and even the little things you dont usually tell people. And hopefully, habang mas nakikilala kita, mas marami pa tayong memories na mabubuo together.</div></div>
+    </div>
+  </section>
+
+  <!-- PHOTOS: files in /assets. Edit captions and descriptions here. -->
+  <section class="sec rv">
+    <h2 class="st">Our Little World 📸</h2>
+    <div class="gallery">
+      <figure class="glass ph"><img src="assets/ml1.jpeg" alt="Us playing Mobile Legends" loading="lazy">
+        <figcaption><b>One of our little ML moments</b><p>Our favorite game and some of my favorite moments with you</p></figcaption></figure>
+      <figure class="glass ph"><img src="assets/ml2.jpeg" alt="Another Mobile Legends memory" loading="lazy">
+        <figcaption><b>Another memory with you </b><p>Ito pala yung favor na hiningi ko sayo</p></figcaption></figure>
+      <figure class="glass ph"><img src="assets/convo.jpeg" alt="Our first chat" loading="lazy">
+        <figcaption><b>Where it all started.</b><p>Ang random lang ng simula natin pero look where we are now. </p></figcaption></figure>
+      <figure class="glass ph"><img src="assets/meta.jpeg" alt="AI-generated cartoon of the two of us" loading="lazy">
+        <figcaption><b>Us someday </b><p>AI generated lang muna to for now. Pero sana soon, maging real memory na natin to.Thank you meta ai</p></figcaption></figure>
+      <figure class="glass ph future"><div class="frame"><span class="cam">📷</span></div>
+        <figcaption><b>Reserved for our first real-life photo together. 📸💗</b><p>This spot is waiting for a real picture of us.</p><em>Coming soon...</em></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- CLOSING SECTION -->
+  <section class="closing">
+    <div class="glass cl-in rv">
+      <h2>To my Nica Angela,</h2>
+      <p class="thx">Thank you for being part of my life.</p>
+      <p>Gusto kong sulitin natin yung bawat moment na meron tayo ngayon. Gusto ko pa ng maraming games kasama ka, random na kwentohan, dates, tawanan, at memories na tayo lang ang makakaalala.</p>
+      <p>Good luck sa journey mo baby, I’m always rooting for you. Galingan mo sa lahat ng ginagawa mo andito lang ako palagi para suportahan ka. Sa bawat achievement mo gusto kong maging isa sa mga unang magcheer para sayo. Take care always.</p>
+      <p class="beg">Iloveyou always in all ways!</p>
+      <button id="lastBtn" class="btn2" type="button">One Last Thing... </button>
+    </div>
+  </section>
+</main>
+
+<!-- MODAL for the four cards -->
+<div id="modal" class="modal" aria-hidden="true"><div class="sheet glass" role="dialog" aria-modal="true" aria-labelledby="mT">
+  <h3 id="mT"></h3><p id="mB"></p><button id="mClose" class="btn2" type="button">Close 💗</button></div></div>
+
+<!-- FINAL MESSAGE overlay -->
+<div id="finale" class="finale" aria-hidden="true"><div class="fin-in">
+  <button id="fClose" class="fx-close" type="button" aria-label="Close">✕</button>
+  <p class="fl big">I love you, Nica Angela. </p>
+  <p class="fl">Always remember...</p>
+  <p class="fl quote">Palagi mong tatandaan baby meron kang ako. I’ll always be here to support you, makinig sayo, samahan ka, and believe in you even on the days na nahihirapan kang maniwala sa sarili mo. Nandito lang ako palagi cheering for you every step of the way.</p>
+  <p class="fl sign">— Your Polpol </p>
+</div></div>
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  const fx = $('#fx');
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Floating heart / sparkle / note
+  function float(x, y, sym = '💗', size) {
+    if (calm) return;
+    const el = document.createElement('span');
+    el.className = 'fh';
+    el.textContent = sym;
+    el.style.cssText = `left:${x}px;top:${y}px;--dx:${(Math.random() - .5) * 140}px;font-size:${size || 14 + Math.random() * 18}px;animation-duration:${3 + Math.random() * 2.5}s`;
+    fx.appendChild(el);
+    setTimeout(() => el.remove(), 6000);
+  }
+  const burst = (x, y, n = 10, syms = ['💗', '💖', '✨', '🌸']) =>
+    { for (let i = 0; i < n; i++) setTimeout(() => float(x + (Math.random() - .5) * 60, y, syms[i % syms.length]), i * 60); };
+
+  // ---------- PAGE 1 -> PAGE 2 ----------
+  const STEPS = ['Verifying reward...', 'Preparing your reward...', 'Almost ready...'];
+  $('#claimBtn').addEventListener('click', e => {
+    e.currentTarget.disabled = true;
+    $('#loader').hidden = false;
+    let i = 0;
+    (function step() {
+      $('#lt').textContent = STEPS[i];
+      $('#bar').style.width = ((i + 1) / STEPS.length * 100) + '%';
+      i++;
+      setTimeout(i < STEPS.length ? step : transition, 900);
+    })();
+  });
+
+  function transition() {
+    const card = $('#rewardCard'), r = card.getBoundingClientRect();
+    card.classList.add('dissolve');
+    for (let k = 0; k < 30; k++)
+      setTimeout(() => float(r.left + Math.random() * r.width, r.top + Math.random() * r.height, ['💗', '💖', '🌸', '✨'][k % 4]), k * 35);
+    setTimeout(() => $('#page1').classList.add('out'), 600);
+    setTimeout(() => {
+      $('#page1').hidden = true;
+      $('#page2').hidden = false;
+      document.body.classList.add('p2');
+      window.scrollTo(0, 0);
+      $$('.seq').forEach((p, n) => setTimeout(() => p.classList.add('show'), 500 + n * 1300));
+      observe();
+      document.title = 'For Nica Angela 💗';
+      au.play().catch(() => {});   // music starts once she reaches the gift page
+      setInterval(ambient, 2600);
+    }, 1500);
+  }
+
+  // Fade sections in as she scrolls
+  function observe() {
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); }
+    }), { threshold: .12 });
+    $$('.rv').forEach(el => io.observe(el));
+  }
+  function ambient() {
+    if (document.hidden) return;
+    float(Math.random() * innerWidth, innerHeight - 20, Math.random() > .7 ? '✨' : '💗');
+  }
+
+  // ---------- ENVELOPE ----------
+  const env = $('#envelope');
+  let lt;
+  env.addEventListener('click', () => {
+    const open = !env.classList.contains('open');   // tap again = close letter
+    env.classList.toggle('open', open);
+    env.setAttribute('aria-expanded', open);
+    $('#hint').textContent = open ? 'Tap again to close' : 'Tap the envelope';
+    clearTimeout(lt);
+    if (open) {
+      const r = env.getBoundingClientRect();
+      burst(r.left + r.width / 2, r.top + r.height / 2, 14);
+      lt = setTimeout(() => { $('#letterWrap').classList.add('open'); setTimeout(() => $('#letterWrap').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 400); }, 500);
+    } else $('#letterWrap').classList.remove('open');
+  });
+
+  // ---------- CARD MODAL ----------
+  const modal = $('#modal');
+  const closeModal = () => { modal.classList.remove('on'); modal.setAttribute('aria-hidden', 'true'); };
+  $$('.card').forEach(c => c.addEventListener('click', () => {
+    $('#mT').textContent = c.dataset.t;
+    $('#mB').innerHTML = c.parentElement.querySelector('.msg').innerHTML;
+    modal.classList.add('on');
+    modal.setAttribute('aria-hidden', 'false');
+    $('#mClose').focus();
+  }));
+  $('#mClose').addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+
+  // ---------- MUSIC ----------
+  const au = $('#au'), pp = $('#pp'), fmt = t => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+  let noteTimer;
+  pp.addEventListener('click', () => {
+    if (au.paused) au.play().catch(() => { $('#pt').textContent = 'Add assets/our-song.mp3 to play 🎵'; });
+    else au.pause();
+  });
+  au.addEventListener('play', () => {
+    pp.classList.add('on');
+    $('#pt').textContent = 'Playing our song 🎶';
+    noteTimer = setInterval(() => {
+      const r = pp.getBoundingClientRect();
+      float(r.left + 20, r.top, ['🎵', '🎶', '♪'][Math.floor(Math.random() * 3)], 20);
+    }, 900);
+  });
+  au.addEventListener('pause', () => { pp.classList.remove('on'); $('#pt').textContent = 'Play our song 🎵'; clearInterval(noteTimer); });
+  au.addEventListener('timeupdate', () => {
+    $('#pfill').style.width = (au.duration ? au.currentTime / au.duration * 100 : 0) + '%';
+    $('#ptime').textContent = fmt(au.currentTime) + (au.duration ? ' / ' + fmt(au.duration) : '');
+  });
+  $('#pbar').addEventListener('click', e => {
+    if (!au.duration) return;
+    const b = e.currentTarget.getBoundingClientRect();
+    au.currentTime = (e.clientX - b.left) / b.width * au.duration;
+  });
+
+  // ---------- FINAL INTERACTION ----------
+  const fin = $('#finale');
+  let finTimer;
+  $('#lastBtn').addEventListener('click', () => {
+    fin.classList.add('on');
+    fin.setAttribute('aria-hidden', 'false');
+    $$('.fl').forEach((l, n) => setTimeout(() => l.classList.add('show'), 1200 + n * 2200));
+    finTimer = setInterval(() => float(Math.random() * innerWidth, innerHeight, Math.random() > .6 ? '✨' : '💗'), 350);
+  });
+  $('#fClose').addEventListener('click', () => {
+    fin.classList.remove('on');
+    fin.setAttribute('aria-hidden', 'true');
+    clearInterval(finTimer);
+    $$('.fl').forEach(l => l.classList.remove('show'));
+  });
+  addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); if (fin.classList.contains('on')) $('#fClose').click(); } });
+
+  // ---------- AUTOPLAY PREVIEW (for checking the design) ----------
+  // Set AUTOPLAY = true, or open index.html?autoplay. Set back to false (or remove this block) before sending it to her.
+  const AUTOPLAY = false;
+  if (AUTOPLAY || /autoplay/.test(location.search)) {
+    const wait = ms => new Promise(r => setTimeout(r, ms));
+    const go = async (el, t = 2200) => { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); await wait(t); };
+    (async () => {
+      await wait(1500);
+      $('#claimBtn').click();
+      await wait(10800);                       // loading + transition + reveal lines
+      await go($('.intro'), 3000);
+      await go(env, 1500); env.click(); await wait(2800);
+      await go($('.letter'), 3500);
+      await go($('#player'), 1500);
+      for (const c of $$('.card')) { await go(c, 1200); c.click(); await wait(3200); $('#mClose').click(); await wait(800); }
+      for (const p of $$('.ph')) await go(p, 2200);
+      await go($('.cl-in'), 3000);
+      $('#lastBtn').click();
+    })();
+  }
+})();
+
+</script>
+</body>
+</html>
